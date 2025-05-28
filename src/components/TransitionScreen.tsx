@@ -17,7 +17,7 @@ const Container = styled.div`
 
   background-image:
     linear-gradient(to left, transparent 0%, rgba(0, 0, 0, 0.8) 60%, black 100%),
-    url(${heroesImage});
+    url(${heroesImage}); /* Usa a imagem de heróis como fundo */
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center 20%;
@@ -68,11 +68,12 @@ const MarvelLogoImage = styled.img`
   display: block;
 `;
 
+// Componente funcional TransitionScreen
 const TransitionScreen = () => {
   return (
     <Container>
       <LogoContainer>
-        <MarvelLogoImage src={marvelLogo} alt="Logo da Marvel" />
+        <MarvelLogoImage src={marvelLogo} alt="Logo da Marvel" /> {/* Exibe o logo da Marvel */}
       </LogoContainer>
     </Container>
   );

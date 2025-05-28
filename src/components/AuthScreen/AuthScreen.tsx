@@ -333,12 +333,14 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onLoginSuccess }) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loginError, setLoginError] = useState('');
   const [cadastroError, setCadastroError] = useState('');
+  // Simula usuários já registrados para fins de demonstração
   const [registeredUsers, setRegisteredUsers] = useState(['usuario1', 'email@exemplo.com', 'outroUsuario']);
 
   const handleLogin = () => {
     setLoginError('');
     console.log('Tentando logar com o usuário:', username);
     console.log('Usuários registrados:', registeredUsers);
+    // Verifica se o usuário existe na lista de usuários registrados
     if (registeredUsers.includes(username)) {
       onLoginSuccess();
     } else {

@@ -725,6 +725,7 @@ const allMoviesData: Movie[] = [
   },
 ];
 
+// Filmes ordenados por data de lançamento
 const orderedMoviesByRelease: Movie[] = [
   allMoviesData.find(m => m.id === 101)!,
   allMoviesData.find(m => m.id === 102)!,
@@ -734,6 +735,7 @@ const orderedMoviesByRelease: Movie[] = [
     .sort((a, b) => (b.releaseDate?.getTime() ?? -Infinity) - (a.releaseDate?.getTime() ?? -Infinity))
 ].filter(Boolean) as Movie[];
 
+// Filmes ordenados por ordem cronológica
 const orderedMoviesByChronology: Movie[] = [
   allMoviesData.find(m => m.id === 105)!,
   allMoviesData.find(m => m.id === 104)!,
@@ -745,6 +747,7 @@ const orderedMoviesByChronology: Movie[] = [
 
 
 const CharacterScreen: React.FC = () => {
+  // Dados de todos os personagens
   const allCharactersData: Character[] = [
     { id: 1, name: 'Homem-Aranha', description: 'Após ser mordido por uma aranha radioativa, Peter Parker se torna o amigo da vizinhança, o Homem-Aranha.', imageUrl: aranhaFoto, detailsUrl: '/homem-aranha' },
     {
@@ -764,6 +767,7 @@ const CharacterScreen: React.FC = () => {
 
   ];
 
+  // Dados de todas as HQs
   const allHQsData: HQ[] = [
     {
       id: 201,
@@ -803,17 +807,27 @@ const CharacterScreen: React.FC = () => {
     },
   ];
 
+  // Estado para controlar o índice inicial dos personagens exibidos (para paginação)
   const [startIndex, setStartIndex] = useState(0);
+  // Personagens atualmente exibidos, baseados no startIndex
   const displayedCharacters = allCharactersData.slice(startIndex, startIndex + 3);
+  // Estado para armazenar o personagem/filme/HQ selecionado para exibir detalhes
   const [selectedCharacter, setSelectedCharacter] = useState<Character | Movie | HQ | null>(null);
+  // Estado para controlar a exibição do overlay de detalhes
   const [showDetails, setShowDetails] = useState(false);
+  // Estado para controlar a seção atual (personagens, filmes, HQs)
   const [currentSection, setCurrentSection] = useState<'characters' | 'movies' | 'hqs'>('characters');
 
+  // Estado para os filmes a serem exibidos (afetado pelo filtro)
   const [displayedMovies, setDisplayedMovies] = useState<Movie[]>([]);
+  // Estado para controlar o índice inicial dos filmes exibidos (para paginação)
   const [movieStartIndex, setMovieStartIndex] = useState(0);
+  // Estado para controlar o filtro de filmes (lançamento ou cronologia)
   const [movieFilter, setMovieFilter] = useState<'lancamento' | 'cronologia'>('lancamento');
+  // Estado para controlar a visibilidade do dropdown de filtro de filmes
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
+  // Efeito para atualizar os filmes exibidos quando o filtro ou o índice de início muda
   useEffect(() => {
     let moviesToProcess: Movie[];
 
@@ -826,16 +840,19 @@ const CharacterScreen: React.FC = () => {
     setDisplayedMovies(moviesToProcess.slice(movieStartIndex, movieStartIndex + 3));
   }, [movieFilter, movieStartIndex]);
 
+  // Alterna a visibilidade do dropdown de filtro
   const toggleFilter = () => {
     setIsFilterOpen(!isFilterOpen);
   };
 
+  // Lida com a seleção de uma opção de filtro de filmes
   const handleFilterSelect = (value: 'lancamento' | 'cronologia') => {
     setMovieFilter(value);
-    setMovieStartIndex(0);
-    setIsFilterOpen(false);
+    setMovieStartIndex(0); // Reinicia o índice de exibição ao mudar o filtro
+    setIsFilterOpen(false); // Fecha o dropdown após a seleção
   };
 
+  // Lida com a navegação para o próximo filme na lista paginada
   const handleNextMovie = () => {
     let moviesTotalForPagination: Movie[];
 
@@ -850,23 +867,27 @@ const CharacterScreen: React.FC = () => {
     }
   };
 
+  // Lida com a navegação para o filme anterior na lista paginada
   const handlePrevMovie = () => {
     if (movieStartIndex > 0) {
       setMovieStartIndex(movieStartIndex - 1);
     }
   };
 
+  // Exibe o overlay de detalhes para um item selecionado (personagem, filme ou HQ)
   const handleShowDetails = (item: Character | Movie | HQ) => {
     setSelectedCharacter(item);
     setShowDetails(true);
   };
 
+  // Lida com a navegação para o próximo conjunto de personagens na lista paginada
   const handleNext = () => {
     if (startIndex + 3 < allCharactersData.length) {
       setStartIndex(startIndex + 1);
     }
   };
 
+  // Lida com a navegação para o conjunto anterior de personagens na lista paginada
   const handlePrev = () => {
     if (startIndex > 0) {
       setStartIndex(startIndex - 1);
@@ -903,16 +924,20 @@ const CharacterScreen: React.FC = () => {
         ))}
         {currentSection === 'movies' && (
           <>
+            {/* Contêiner para o filtro de filmes (lançamento/cronologia) */}
             <FilterContainerMoviesCronologia>
               <CustomFilterContainer>
                 <FilterDisplay onClick={toggleFilter}>
                   {isFilterOpen ? (
+                    // Exibe "Filtrar por" e uma seta para cima quando o filtro está aberto
                     <>Filtrar por<FilterArrow style={{ marginLeft: 'auto' }}>&#9658;</FilterArrow></>
                   ) : (
+                    // Exibe a opção de filtro atual e uma seta para baixo quando o filtro está fechado
                     <>{movieFilter === 'lancamento' ? 'Lançamento' : 'Cronologia'}<FilterArrow>&#9660;</FilterArrow></>
                   )}
                 </FilterDisplay>
                 {isFilterOpen && (
+                  // Lista de opções do filtro, visível apenas quando o filtro está aberto
                   <FilterOptionsList>
                     <FilterHeader>Filtrar por<FilterArrow style={{ marginLeft: 'auto' }}>&#9658;</FilterArrow></FilterHeader>
                     <FilterOptionItem onClick={() => handleFilterSelect('lancamento')}>Lançamento</FilterOptionItem>
@@ -932,6 +957,7 @@ const CharacterScreen: React.FC = () => {
                 </CharacterInfoOverlay>
               </CharacterCard>
             ))}
+            {/* Botões de navegação para filmes */}
             {displayedMovies.length > 0 && movieStartIndex > 0 && (
               <LeftArrow src={leftArrow} alt="Voltar Filme" onClick={handlePrevMovie} style={{ top: '60%', transform: 'translateY(-50%)' }} />
             )}
@@ -952,6 +978,7 @@ const CharacterScreen: React.FC = () => {
           </CharacterCard>
         ))}
       </CharactersContainer>
+      {/* Botões de navegação para personagens e HQs */}
       {currentSection === 'characters' && startIndex > 0 && <LeftArrow src={leftArrow} alt="Voltar" onClick={handlePrev} />}
       {currentSection === 'characters' && startIndex + 3 < allCharactersData.length && <RightArrow src={rightArrow} alt="Próximo" onClick={handleNext} />}
       {currentSection === 'hqs' && startIndex > 0 && <LeftArrow src={leftArrow} alt="Voltar" onClick={handlePrev} />}
@@ -960,6 +987,7 @@ const CharacterScreen: React.FC = () => {
 
       {
         showDetails && selectedCharacter && (
+          // Overlay para exibir os detalhes de um personagem, filme ou HQ
           <CharacterDetailsOverlay onClick={(e) => { if (e.target === e.currentTarget) setShowDetails(false); }}>
             <CharacterDetailsCard>
               <DetailsImageContainer>
@@ -973,11 +1001,13 @@ const CharacterScreen: React.FC = () => {
                   {selectedCharacter && ('name' in selectedCharacter ? selectedCharacter.name : 'title' in selectedCharacter ? selectedCharacter.title : 'Detalhes')}
                 </DetailsTitle>
 
+                {/* Exibe a descrição se o item não for um personagem com 'apareceEm' */}
                 {selectedCharacter && 'description' in selectedCharacter && !('apareceEm' in selectedCharacter) && (
                   <p>{selectedCharacter.description}</p>
                 )}
 
 
+                {/* Exibe as aparições se o item for um personagem */}
                 {selectedCharacter && 'apareceEm' in selectedCharacter && (
                   <div>
                     <DetailsSubtitle>Aparições:</DetailsSubtitle>
@@ -989,6 +1019,7 @@ const CharacterScreen: React.FC = () => {
                   </div>
                 )}
 
+                {/* Exibe o serviço de streaming se o item for um filme */}
                 {selectedCharacter && 'streamingService' in selectedCharacter && (
                   <div>
                     <DetailsSubtitle style={{ fontSize: '1em' }}>Disponível em Streaming:</DetailsSubtitle>
@@ -1001,6 +1032,7 @@ const CharacterScreen: React.FC = () => {
                   </div>
                 )}
 
+                {/* Exibe links de compra se o item for uma HQ */}
                 {selectedCharacter && 'purchaseLinks' in selectedCharacter && (
                   <div>
                     <DetailsSubtitle style={{ fontSize: '1em' }}>Disponível para Compra:</DetailsSubtitle>
@@ -1015,6 +1047,7 @@ const CharacterScreen: React.FC = () => {
                   </div>
                 )}
 
+                {/* Exibe a crítica se a propriedade 'critica' existir */}
                 {selectedCharacter && 'critica' in selectedCharacter && selectedCharacter.critica !== undefined && (
                   <DetailsRating>
                     <DetailsSubtitle>Crítica:</DetailsSubtitle>
@@ -1025,6 +1058,7 @@ const CharacterScreen: React.FC = () => {
                   </DetailsRating>
                 )}
 
+                {/* Exibe a avaliação dos fãs se a propriedade 'avaliacoesDosFas' existir */}
                 {selectedCharacter && 'avaliacoesDosFas' in selectedCharacter && selectedCharacter.avaliacoesDosFas !== undefined && (
                   <DetailsRating>
                     <DetailsSubtitle>Avaliação dos Fãs:</DetailsSubtitle>
@@ -1035,6 +1069,7 @@ const CharacterScreen: React.FC = () => {
                   </DetailsRating>
                 )}
 
+                {/* Botão para fechar o overlay de detalhes */}
                 <CloseButton onClick={() => setShowDetails(false)}>
                   <CloseButtonImage src={botaoClose} alt="Fechar" />
                 </CloseButton>

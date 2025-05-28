@@ -30,6 +30,7 @@ const Logo = styled.img`
 const SplashScreen: React.FC = () => {
   return (
     <Container>
+      {/* Exibe o logo da Marvel centralizado na tela */}
       <Logo src={marvelLogo} alt="Logo da Marvel" />
     </Container>
   );
