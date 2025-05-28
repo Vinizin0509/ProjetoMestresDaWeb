@@ -9,7 +9,7 @@ Aplicação front-end que apresenta filmes, séries e HQs do universo Marvel. In
 - HTML5  
 - CSS3 / Styled-Components 
 - TypeScript
-- React  
+- React / Vite
 - npm
 
 ---
@@ -33,7 +33,7 @@ npm run dev
 ⚠️ Certifique-se de que você tem o Node.js e o npm instalados.
 
 ✅ **Funcionalidades**
- Exibição de filmes, séries e HQs da Marvel
- Tela de login
- Tela de cadastro
- Navegação entre seções
+ - Exibição de filmes, séries e HQs da Marvel
+ - Tela de login
+ - Tela de cadastro
+ - Navegação entre seções
